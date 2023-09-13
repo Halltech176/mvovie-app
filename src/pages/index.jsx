@@ -200,6 +200,7 @@ const Header = () => {
 
 const MovieCard = ({ data }) => {
   const date = new Date(data?.release_date);
+  const utc_time = date.toISOString().replace(/\.\d+Z$/, "Z");
 
   const navigate = useNavigate();
 
@@ -212,7 +213,7 @@ const MovieCard = ({ data }) => {
   return (
     <div
       data-testid="movie-card"
-      onClick={() => navigate(`/movie/${data?.id}`)}
+      onClick={() => navigate(`/movies/${data?.id}`)}
       className="text-black relative cursor-pointer"
     >
       <span
@@ -230,7 +231,7 @@ const MovieCard = ({ data }) => {
         data-testid="movie-release-date"
         className="md:text-base text-sm my-2 text-dark-100"
       >
-        USA, {date.getFullYear()}
+        USA, {utc_time}
       </p>
       <h1
         data-testid="movie-title"

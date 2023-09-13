@@ -111,7 +111,8 @@ const MovieDetails = () => {
   const [open, setOpen] = useState(false);
 
   const date = new Date(movie?.release_date);
-  console.log(param.id);
+  const utc_time = date.toISOString().replace(/\.\d+Z$/, "Z");
+
   return (
     <>
       <header className="flex md:hidden item-center justify-between p-3 border-b-2 border-primary">
@@ -149,7 +150,7 @@ const MovieDetails = () => {
           </div>
           <div className="my-3 md:flex gap-4 items-center my-3">
             <h3 data-testid="movie-title">{movie.original_title}</h3>
-            <h3>{date.getUTCDate()}</h3>
+            <h3 data-testid="movie-release-date">{utc_time}</h3>
             {genreIds?.map((data) => {
               return (
                 <span className="text-primary mx-2 py-1 font-bold px-5 border border-[#F8E7EB] rounded-full">
@@ -157,11 +158,12 @@ const MovieDetails = () => {
                 </span>
               );
             })}
+            <h3 data-testid="movie-runtime">{movie?.runtime}</h3>
           </div>
 
           <section className="md:flex justify-between gap-3">
             <div className="md:max-w-[55vw]">
-              <p>{movie?.overview}</p>
+              <p data-testid="movie-overview">{movie?.overview}</p>
               <div className="flex flex-col gap-5">
                 <TextContent title="Director" text="Joseph Kosinki" />
                 <TextContent
