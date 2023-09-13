@@ -1,0 +1,6 @@
+.poster {
+  background: url("./assets/poster.png") no-repeat;
+  /* height: 100vh; */
+  color: #fff;
+  background-size: cover;
+}
