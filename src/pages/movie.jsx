@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { BASE_URL, TOKEN, genreMap } from "../../data";
 import ButtonComponent from "../components/buton";
 
@@ -19,8 +19,12 @@ import axios from "axios";
 import LogoComponent from "../components/logo";
 
 const ListItem = ({ title, icon }) => {
+  const navigate = useNavigate();
   return (
-    <li className="flex cursor-pointer hover:border-r-2 hover:border-primary hover:bg-red-100  p-3 w-full  items-center gap-4">
+    <li
+      onClick={() => navigate("/")}
+      className="flex cursor-pointer hover:border-r-2 hover:border-primary hover:bg-red-100  p-3 w-full  items-center gap-4"
+    >
       <span>
         <img src={icon} />{" "}
       </span>
@@ -109,9 +113,10 @@ const MovieDetails = () => {
   });
 
   const [open, setOpen] = useState(false);
-
-  const date = new Date(movie?.release_date);
-  const utc_time = date.toISOString().replace(/\.\d+Z$/, "Z");
+  console.log(movie?.release_date);
+  const date = movie?.release_date && new Date(movie?.release_date);
+  // const utc_time = "";
+  const utc_time = date && date?.toISOString().replace(/\.\d+Z$/, "Z");
 
   return (
     <>
@@ -151,9 +156,12 @@ const MovieDetails = () => {
           <div className="my-3 md:flex gap-4 items-center my-3">
             <h3 data-testid="movie-title">{movie.original_title}</h3>
             <h3 data-testid="movie-release-date">{utc_time}</h3>
-            {genreIds?.map((data) => {
+            {genreIds?.map((data, index) => {
               return (
-                <span className="text-primary mx-2 py-1 font-bold px-5 border border-[#F8E7EB] rounded-full">
+                <span
+                  key={index}
+                  className="text-primary mx-2 py-1 font-bold px-5 border border-[#F8E7EB] rounded-full"
+                >
                   {data}
                 </span>
               );
@@ -207,7 +215,7 @@ const MovieDetails = () => {
                   ?.slice(0, 3)
                   ?.map?.((data, index) => {
                     return (
-                      <div className="">
+                      <div key={index} className="">
                         <img
                           src={`https://image.tmdb.org/t/p/original${data?.logo_path}`}
                           alt=""

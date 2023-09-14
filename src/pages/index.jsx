@@ -63,6 +63,29 @@ const HomePage = () => {
     }
   };
 
+  const SearchMovies = async (name) => {
+    try {
+      // setLoading(true);
+      const response = await axios.get(
+        `https://api.themoviedb.org/3/search/movie?query=${name}&include_adult=false&language=en-US&page=1`,
+        {
+          headers: {
+            accept: "application/json",
+            Authorization: `Bearer ${TOKEN}`,
+          },
+        }
+      );
+
+      console.log(response);
+      setMovies(response.data);
+    } catch (err) {
+      setError(err);
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     FetchMovies();
   }, []);
@@ -79,7 +102,7 @@ const HomePage = () => {
       <main>
         <div className="poster">
           <SectionLayout>
-            <Header />
+            <Header SearchMovies={SearchMovies} />
             <div className="md:my-28 my-14 flex-col lg:max-w-[25vw] flex gap-6 ">
               <h1 className="md:text-5xl text-3xl md:leading-tight tracking-wide text-white font-bold">
                 John Wick 3 : Parabellum
@@ -137,32 +160,40 @@ const SectionLayout = ({ children }) => {
 
 // Header component
 
-const Header = () => {
-  const MobileNav = ({ open, setOpen }) => {
-    return (
-      <header className="fixed top-0  right-0 z-10 left-0">
-        <div className="bg-white flex  gap-3 border-b-2  z-50 border-b-primary py-5 item-center p-3">
-          <div className="relative w-full">
-            <input
-              placeholder="What do you want to watch?"
-              className="bg-transparent border-2 w-full rounded-md px-4 pr-8 py-2 text-white border-[#D1D5DB]"
-              type="text"
-            />
-          </div>
-
-          <nav className="flex items-center gap-4">
-            <NavLink className="md:block hidden" to="/">
-              Sign in
-            </NavLink>
-            <span onClick={() => setOpen(!open)}>
-              <img src={menu} alt="menu icon" />
-            </span>
-          </nav>
+const MobileNav = ({ open, setOpen }) => {
+  return (
+    <header className="fixed top-0  right-0 z-10 left-0">
+      <div className="bg-white flex  gap-3 border-b-2  z-50 border-b-primary py-5 item-center p-3">
+        <div className="relative w-full">
+          <input
+            placeholder="What do you want to watch?"
+            className="bg-transparent border-2 w-full rounded-md px-4 pr-8 py-2 text-white border-[#D1D5DB]"
+            type="text"
+          />
         </div>
-      </header>
-    );
-  };
+
+        <nav className="flex items-center gap-4">
+          <NavLink className="md:block hidden" to="/">
+            Sign in
+          </NavLink>
+          <span onClick={() => setOpen(!open)}>
+            <img src={menu} alt="menu icon" />
+          </span>
+        </nav>
+      </div>
+    </header>
+  );
+};
+
+const Header = ({ SearchMovies }) => {
+  const [name, setName] = useState("");
+
   const [open, setOpen] = useState(false);
+
+  // const handleChange = (e) => {
+  //   setName(e.target.name);
+  //   SearchMovies(e.target.name);
+  // };
   return (
     <>
       {open && <MobileNav open={open} setOpen={setOpen} />}
@@ -172,6 +203,8 @@ const Header = () => {
 
         <div className="relative md:block hidden">
           <input
+            // value={name}
+            // onChange={handleChange}
             placeholder="What do you want to watch?"
             className="bg-transparent border-2 w-[45vw]  rounded-md px-4 pr-8 py-2 text-white border-[#D1D5DB]"
             type="text"
@@ -199,8 +232,10 @@ const Header = () => {
 // Movie card component
 
 const MovieCard = ({ data }) => {
+  console.log(data);
   const date = new Date(data?.release_date);
-  const utc_time = date.toISOString().replace(/\.\d+Z$/, "Z");
+  // const utc_time = date?.toISOString().replace(/\.\d+Z$/, "Z");
+  const utc_time = "";
 
   const navigate = useNavigate();
 
